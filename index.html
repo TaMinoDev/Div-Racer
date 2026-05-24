@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racer-Interface</title>
+</head>
+
+<body style="background-color: black; color: lime">
+    <h1>CHOOSE YOUR VERSION</h1>
+    <b>&#62; NEW</b>
+    <br>
+    <b>&#62; OLD</b>
+    <br>
+    <br>
+    <br>
+    <b>TYPE YOUR GAMEMODE INTO THE INPUT AREA</b>
+    <button onclick="checkVersion()" style="width: 100%; position: fixed; left: 0px; bottom: 20px;">CONFIRM</button>
+    <input style="width: 100%; background-color: #2e2e2e; color: white; position: fixed; left: 0px; bottom: 0px;" id="input">
+    <script>
+        const input = document.getElementById('input');
+
+        function checkVersion() {
+            if (input.value.toLowercase() === 'new') {
+                location.href = 'new_racer.html';
+            } else if (input.value.toLowercase() === 'old') {
+                location.href = 'old.html';
+            } else {
+                alert('AN ERROR WAS FOUND, PLEASE TRY AGAIN AND LOOK FOR SPELLING MISTAKES');
+            }
+        }
+    </script>
+</body>
+
+</html>
