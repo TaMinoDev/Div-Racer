@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racer</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .car {
+            border: 1px solid black;
+            width: 50px;
+            height: 25px;
+            transition: 1s;
+        }
+
+        #car1 {
+            background-color: red;
+        }
+
+        #car2 {
+            background-color: rgb(0, 0, 125);
+        }
+
+        #car3 {
+            background-color: green;
+        }
+
+        #car4 {
+            background-color: rgb(255, 0, 217);
+        }
+
+        #car5 {
+            background-color: rgb(255, 200, 0);
+        }
+
+        #road {
+            border: 1px solid black;
+            padding: 5px;
+            margin: 5px;
+            width: calc(100 - 5px);
+        }
+
+        #leaderBoard {
+            transition: 1s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="road">
+        <div class="car" id="car1" data-pos="0" style="margin-left: 0px;"></div>
+        <div class="car" id="car2" data-pos="0" style="margin-left: 0px;"></div>
+        <div class="car" id="car3" data-pos="0" style="margin-left: 0px;"></div>
+        <div class="car" id="car4" data-pos="0" style="margin-left: 0px;"></div>
+        <div class="car" id="car5" data-pos="0" style="margin-left: 0px;"></div>
+    </div>
+    <div id="hotbar">
+        <button onclick="tick()">Tick</button><button onclick="startRace()">start</button><button
+            onclick="clearInterval(main)">stop</button><input type="range" step="50" min="50" max="5000" id="tickSpeed"
+            value="900" name="tickSpeed"><label for="tickSpeed"></label>
+    </div>
+    <hr>
+    <div id="bet">
+        <button onclick="betOn(1)">1</button>
+        <button onclick="betOn(2)">2</button>
+        <button onclick="betOn(3)">3</button>
+        <button onclick="betOn(4)">4</button>
+        <button onclick="betOn(5)">5</button>
+        <div id="betBoard">
+
+        </div>
+    </div>
+    <hr>
+    <div id="leaderBoard">
+        <!-- Leader Board -->
+    </div>
+    <script>
+        const cars = document.querySelectorAll('.car');
+        const car1 = document.getElementById('car1');
+        const car2 = document.getElementById('car2');
+        const car3 = document.getElementById('car3');
+        const car4 = document.getElementById('car4');
+        const car5 = document.getElementById('car5');
+
+        const tickSpeed = document.getElementById('tickSpeed');
+
+        let ziel = Number(document.getElementById('road').offsetWidth) - 55;
+        let main;
+        let bets = {
+            1: '',
+            2: '',
+            3: '',
+            4: '',
+            5: ''
+        };
+        let leader = {
+            1: '',
+            2: '',
+            3: '',
+            4: '',
+            5: ''
+        };
+        let player = 1;
+        let end = false;
+        let winner = 0;
+
+        function betOn(carID) {
+            bets[carID] = bets[carID] + ' Player ' + player;
+            player++;
+            document.getElementById('betBoard').innerText = `Car 1: ${bets[1]}\nCar 2: ${bets[2]}\nCar 3: ${bets[3]}\nCar 4: ${bets[4]}\nCar 5: ${bets[5]}\t`;
+        }
+
+        function startRace() {
+            alert(`READY...\nSTEADY...\nGOOOOOOOO`);
+            main = setInterval(tick, tickSpeed.value);
+        }
+
+        function tick() {
+            if (end === true) {
+                showWinner();
+            } else {
+                if (Number(car1.dataset.pos) === ziel && Number(car2.dataset.pos) === ziel && Number(car3.dataset.pos) === ziel && Number(car4.dataset.pos) === ziel && Number(car5.dataset.pos) === ziel) {
+                    alert('End');
+                    clearInterval(main);
+                    end = true;
+                    showWinner();
+                } else {
+                    cars.forEach((e) => {
+                        let ranVal = random(1, 20);
+                        e.dataset.pos = Number(e.dataset.pos) + ranVal;
+                        if (Number(e.dataset.pos) >= ziel) {
+                            e.style.marginLeft = ziel + 'px';
+                            e.dataset.pos = ziel;
+
+                            if (winner !== 1 && winner !== 2 && winner !== 3 && winner !== 4 && winner !== 5) {
+                                carID = e.id.replace('car', '');
+                                carID = Number(carID);
+                                winner = carID;
+                            }
+                        } else {
+                            e.style.marginLeft = Number(e.dataset.pos) + 'px';
+                        }
+                    });
+                    calcBoard();
+                }
+            }
+        }
+
+        function showWinner(){
+            let forBets = winner;
+            if(winner === 1){
+                winner = 'Red';
+            } else if(winner === 2){
+                winner = 'Blue';
+            } else if(winner === 3){
+                winner = 'Green';
+            } else if(winner === 4){
+                winner = 'Pink';
+            } else if(winner === 5){
+                winner = 'Yellow';
+            }
+            alert('And the Winner is... The ' + winner + ' car');
+            alert('Following Players having bet right: ' + bets[forBets]);
+        }
+
+        function random(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function calcBoard() {
+            const places = {
+                red: car1.dataset.pos,
+                blue: car2.dataset.pos,
+                green: car3.dataset.pos,
+                pink: car4.dataset.pos,
+                yellow: car5.dataset.pos
+            };
+
+            const sortet = Object.keys(places).sort((a, b) => places[b] - places[a]);
+            const [place1, place2, place3, place4, place5] = sortet;
+
+            document.getElementById('leaderBoard').innerText = `1. ${place1} \n2. ${place2} \n3. ${place3} \n4. ${place4} \n5. ${place5}`;
+            leader[1] = place1;
+            leader[2] = place2;
+            leader[3] = place3;
+            leader[4] = place4;
+            leader[5] = place5;
+        }
+    </script>
+</body>
+
+</html>
