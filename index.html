@@ -17,14 +17,14 @@
     <br>
     <b>TYPE YOUR GAMEMODE INTO THE INPUT AREA</b>
     <button onclick="checkVersion()" style="width: 100%; position: fixed; left: 0px; bottom: 20px;">CONFIRM</button>
-    <input style="width: 100%; background-color: #2e2e2e; color: white; position: fixed; left: 0px; bottom: 0px;" id="input">
+    <input style="width: 100%; background-color: #2e2e2e; color: white; position: fixed; left: 0px; bottom: 0px; font-family: sans" id="input">
     <script>
         const input = document.getElementById('input');
 
         function checkVersion() {
-            if (input.value.toLowercase() === 'new') {
+            if (input.value.toLocaleLowerCase() === 'new') {
                 location.href = 'new_racer.html';
-            } else if (input.value.toLowercase() === 'old') {
+            } else if (input.value.toLocaleLowerCase() === 'old') {
                 location.href = 'old.html';
             } else {
                 alert('AN ERROR WAS FOUND, PLEASE TRY AGAIN AND LOOK FOR SPELLING MISTAKES');
